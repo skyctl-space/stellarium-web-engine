@@ -129,7 +129,6 @@ flags = [
          '-Wno-deprecated-non-prototype',
          '-Wno-unused-but-set-variable',
          '-s', 'MODULARIZE=1', '-s', 'EXPORT_NAME=StelWebEngine',
-         '-s', 'EXPORT_ES6=1',
          '-s', 'ALLOW_MEMORY_GROWTH=1',
          '-s', 'ALLOW_TABLE_GROWTH=1',
          '--pre-js', 'src/js/pre.js',
@@ -156,6 +155,9 @@ if env['mode'] in ['profile', 'debug']:
 if env['mode'] == 'debug':
     flags += ['-s', 'SAFE_HEAP=1', '-s', 'ASSERTIONS=1',
               '-s', 'WARN_UNALIGNED=1']
+
+if env['es6']:
+    flags += ['-s', 'EXPORT_ES6=1']
 
 env.Append(CCFLAGS=['-DNO_ARGP', '-DGLES2 1'] + flags)
 env.Append(LINKFLAGS=flags)
