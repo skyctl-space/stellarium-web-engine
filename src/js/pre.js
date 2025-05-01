@@ -8,8 +8,13 @@
  */
 
 // Allow to set the memory file path in 'memFile' argument.
-Module['locateFile'] = function(path) {
-  if (path === "stellarium-web-engine.wasm") return Module.wasmFile;
+Module['locateFile'] = function(path, scriptDirectory) {
+  if (path === "stellarium-web-engine.wasm") {
+    if (Module.wasmFile === undefined) {
+      return scriptDirectory + path;
+    }
+    return Module.wasmFile;
+  }
   return path;
 }
 
