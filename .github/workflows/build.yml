@@ -1,0 +1,46 @@
+name: Build Stellarium Web Engine
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ '*' ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: emscripten/emsdk:4.0.8
+    strategy:
+      matrix:
+        target: [js, js-debug, js-es6, js-es6-debug]
+    if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y scons
+      - name: Build ${{ matrix.target }}
+        run: make ${{ matrix.target }}
+
+  release:
+    runs-on: ubuntu-latest
+    container: emscripten/emsdk:4.0.8
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y scons
+      - name: Build js-es6
+        run: make js-es6
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: |
+            build/stellarium-web-engine.js
+            build/stellarium-web-engine.wasm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
