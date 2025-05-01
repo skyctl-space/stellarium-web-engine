@@ -12,7 +12,7 @@ jobs:
     container: emscripten/emsdk:4.0.8
     strategy:
       matrix:
-        target: [js, js-debug, js-es6, js-es6-debug]
+        target: [js-es6, js-es6-debug]
     if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v4

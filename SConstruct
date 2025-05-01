@@ -149,7 +149,6 @@ flags = [
 if env['mode'] in ['profile', 'debug']:
     flags += [
         '--profiling',
-        '-s', 'ASM_JS=2', # Removes 'use asm'.
     ]
 
 if env['mode'] == 'debug':
