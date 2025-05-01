@@ -324,18 +324,15 @@ static int on_name(const obj_t *obj, void *user,
 {
     void (*f)(const obj_t *obj, void *user, const char *value);
     void *u;
-    int *nb;
     char buf[1024];
     f = USER_GET(user, 0);
     u = USER_GET(user, 1);
-    nb = USER_GET(user, 2);
     if (cat && *cat) {
         snprintf(buf, sizeof(buf), "%s %s", cat, value);
         f(obj, u, buf);
     } else {
         f(obj, u, value);
     }
-    nb++;
     return 0;
 }
 

@@ -364,10 +364,9 @@ Module.afterInit(function() {
 
   // Conveniance function to convert a js string into an allocated C string.
   function stringToC(str) {
-    let size = Module.lengthBytesUTF8(str);
-    let ptr = Module._malloc(size + 1);
-    // For speed, we only support ascii strings for the moment.
-    Module.writeAsciiToMemory(str, ptr, false);
+    let size = Module.lengthBytesUTF8(str + 1);
+    let ptr = Module._malloc(size);
+    Module.stringToUTF8(str, ptr, size);
     return ptr;
   }
 

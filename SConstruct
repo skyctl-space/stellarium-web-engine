@@ -109,13 +109,9 @@ env.Append(CCFLAGS='-DNO_LIBCURL')
 # All the emscripten runtime functions we use.
 # Needed since emscripten 1.37.
 extra_exported = [
-    'ALLOC_NORMAL',
     'GL',
     'UTF8ToString',
-    '_free',
-    '_malloc',
     'addFunction',
-    'allocate',
     'ccall',
     'cwrap',
     'getValue',
@@ -124,13 +120,16 @@ extra_exported = [
     'removeFunction',
     'setValue',
     'stringToUTF8',
-    'writeAsciiToMemory',
     'writeArrayToMemory',
 ]
 extra_exported = ','.join("'%s'" % x for x in extra_exported)
 
 flags = [
+         '-Wno-unused-command-line-argument',
+         '-Wno-deprecated-non-prototype',
+         '-Wno-unused-but-set-variable',
          '-s', 'MODULARIZE=1', '-s', 'EXPORT_NAME=StelWebEngine',
+         '-s', 'EXPORT_ES6=1',
          '-s', 'ALLOW_MEMORY_GROWTH=1',
          '-s', 'ALLOW_TABLE_GROWTH=1',
          '--pre-js', 'src/js/pre.js',
@@ -141,14 +140,12 @@ flags = [
          '-s', 'RESERVED_FUNCTION_POINTERS=10',
          '-O3',
          '-s', 'USE_WEBGL2=1',
+         '-s', 'OFFSCREEN_FRAMEBUFFER=1',
          '-s', 'NO_EXIT_RUNTIME=1',
-         '-s', '"EXPORTED_FUNCTIONS=[]"',
-         '-s', '"EXTRA_EXPORTED_RUNTIME_METHODS=[%s]"' % extra_exported,
+         '-s', '"EXPORTED_FUNCTIONS=[_malloc,_free]"',
+         '-s', '"EXPORTED_RUNTIME_METHODS=[%s]"' % extra_exported,
          '-s', 'FILESYSTEM=0'
         ]
-
-#if env['mode'] not in ['profile', 'debug']:
-#    flags += ['--closure', '1']
 
 if env['mode'] in ['profile', 'debug']:
     flags += [
@@ -159,9 +156,6 @@ if env['mode'] in ['profile', 'debug']:
 if env['mode'] == 'debug':
     flags += ['-s', 'SAFE_HEAP=1', '-s', 'ASSERTIONS=1',
               '-s', 'WARN_UNALIGNED=1']
-
-if env['es6']:
-    flags += ['-s', 'EXPORT_ES6=1', '-s', 'USE_ES6_IMPORT_META=0']
 
 env.Append(CCFLAGS=['-DNO_ARGP', '-DGLES2 1'] + flags)
 env.Append(LINKFLAGS=flags)
