@@ -7,17 +7,6 @@
  * repository.
  */
 
-// Allow to set the memory file path in 'memFile' argument.
-Module['locateFile'] = function(path, scriptDirectory) {
-  if (path === "stellarium-web-engine.wasm") {
-    if (Module.wasmFile === undefined) {
-      return scriptDirectory + path;
-    }
-    return Module.wasmFile;
-  }
-  return path;
-}
-
 Module['onRuntimeInitialized'] = function() {
   // Init OpenGL context.
   if (Module.canvasElement) Module.canvas = Module.canvasElement;
