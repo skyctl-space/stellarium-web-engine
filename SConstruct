@@ -156,7 +156,7 @@ if env['mode'] == 'debug':
               '-s', 'WARN_UNALIGNED=1']
 
 if env['es6']:
-    flags += ['-s', 'EXPORT_ES6=1']
+    flags += ['-s', 'EXPORT_ES6=1', '-s', 'SINGLE_FILE=1']
 
 env.Append(CCFLAGS=['-DNO_ARGP', '-DGLES2 1'] + flags)
 env.Append(LINKFLAGS=flags)
